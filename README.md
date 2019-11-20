@@ -9,10 +9,11 @@ python3 -m venv venv
 . venv/bin/activate
 
 # 安装依赖
-pip install Flask
-pip install Flask-SQLAlchemy
-pip install flask-marshmallow
-pip install marshmallow-sqlalchemy
+# pip install Flask
+# pip install Flask-SQLAlchemy
+# pip install flask-marshmallow
+# pip install marshmallow-sqlalchemy
+pip install -r requirements.txt
 
 # 环境变量
 export FLASK_APP=flaskr
@@ -26,4 +27,7 @@ flask run
 
 # 打开一个 Shell
 flask shell
+
+# 导出依赖
+pip freeze > requirements.txt
 ```
