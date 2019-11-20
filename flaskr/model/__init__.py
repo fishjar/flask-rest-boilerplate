@@ -13,3 +13,13 @@ class BaseModel:
     updatedAt = db.Column("update_at", db.DateTime,
                           default=datetime.datetime.utcnow, comment="更新时间")
     deletedAt = db.Column("deleted_at", db.DateTime, comment="删除时间")
+
+    # __mapper_args__ = {
+    #     "order_by": createdAt.desc()
+    # }
+
+    def update(self, **kwds):
+        """字典更新到模型"""
+        # self.__dict__.update(kwds)
+        for (k, v) in kwds.items():
+            setattr(self, k, v)

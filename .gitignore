@@ -16,3 +16,4 @@ build/
 tmp
 .db
 .sqlite
+.log
