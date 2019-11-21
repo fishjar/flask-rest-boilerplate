@@ -1,7 +1,6 @@
 def init_app(app):
     """注册蓝图"""
-    from flaskr.handler import User, Auth, Role
-    # app.register_blueprint(User.bp)
-    app.register_blueprint(User.bp)
-    app.register_blueprint(Auth.bp)
-    app.register_blueprint(Role.bp)
+    from flaskr import router
+    app.register_blueprint(router.user)
+    app.register_blueprint(router.role)
+    app.register_blueprint(router.auth)

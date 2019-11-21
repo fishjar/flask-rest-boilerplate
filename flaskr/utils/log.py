@@ -45,3 +45,8 @@ def _file_handler():
 def _sorckt_handler():
     """网络日志记录器"""
     pass
+
+
+def _smtp_handler():
+    """邮件日志记录器"""
+    pass

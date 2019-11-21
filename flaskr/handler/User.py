@@ -7,12 +7,10 @@ from flaskr import db
 from flaskr.model.User import User, UserSchema
 from flaskr.utils.err import InvalidUsage
 
-bp = Blueprint("user", __name__)
 schema = UserSchema()
 schemas = UserSchema(many=True)
 
 
-# @bp.route("/users", methods=("GET",))
 # def findAndCountAll():
 #     """查询多条信息"""
 #     page_num = int(request.args.get('pageNum', '1'))
@@ -30,7 +28,6 @@ schemas = UserSchema(many=True)
 #         "rows": schemas.dump(rows)
 #     }
 
-@bp.route("/users", methods=("GET",))
 def findAndCountAll():
     """查询多条信息"""
     page_num = int(request.args.get('pageNum', '1'))
@@ -44,17 +41,6 @@ def findAndCountAll():
     }
 
 
-@bp.route("/users/<string:id>", methods=("GET",))
-def findByPk(id):
-    """根据主键查询单条信息"""
-    # data = User.query.get(id)
-    # if data is None:
-    #     abort(404, description="记录不存在")
-    data = User.query.get_or_404(id)
-    return schema.dump(data)
-
-
-@bp.route("/users", methods=("POST",))
 def singleCreate():
     """创建单条信息"""
     kwds = request.get_json()
@@ -68,7 +54,15 @@ def singleCreate():
     return schema.dump(data)
 
 
-@bp.route("/users/<string:id>", methods=("PATCH",))
+def findByPk(id):
+    """根据主键查询单条信息"""
+    # data = User.query.get(id)
+    # if data is None:
+    #     abort(404, description="记录不存在")
+    data = User.query.get_or_404(id)
+    return schema.dump(data)
+
+
 def updateByPk(id):
     """更新单条"""
     data = User.query.get_or_404(id)
@@ -78,7 +72,6 @@ def updateByPk(id):
     return schema.dump(data)
 
 
-@bp.route("/users/<string:id>", methods=("DELETE",))
 def destroyByPk(id):
     """删除单条"""
     data = User.query.get_or_404(id)

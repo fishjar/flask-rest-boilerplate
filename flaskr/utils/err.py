@@ -46,25 +46,25 @@ def _handle_invalid(e):
 def _handle_exception(e):
     """exception"""
     app.logger.error(f'未知错误：{e}')
-    return jsonify(message=str(e)), getattr(e, "code", 500)
+    return jsonify(message=e.description), getattr(e, "code", 500)
 
 
 def _handle_serverexception(e):
-    """serverexception"""
+    """serverexception 未处理的异常"""
     app.logger.error(f'SERVER错误：{e}')
-    return jsonify(message=str(e)), getattr(e, "code", 500)
+    return jsonify(message=e.description), getattr(e, "code", 500)
 
 
 def _handle_httpexception(e):
     """httpexception"""
     app.logger.error(f'HTTP错误：{e}')
-    return jsonify(message=str(e)), getattr(e, "code", 500)
+    return jsonify(message=e.description), getattr(e, "code", 500)
 
 
 def _handle_404(e):
     """404"""
     app.logger.error(f'404错误：{e}')
-    return jsonify(message=str(e)), 404
+    return jsonify(message=e.description), 404
 
 
 def _handle_500(e):
