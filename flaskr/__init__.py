@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flaskr.config import DevelopmentConfig
-from flaskr.utils import cmd, bp, err, log
+from flaskr.utils import cmd, bp, err, log, auth
 
 __version__ = (1, 0, 0, "dev")
 
@@ -29,6 +29,8 @@ def create_app(config=None):
     with app.app_context():
         # 块中可以访问 current_app
         err.init_app()  # 错误捕获
+
+    auth.init_app(app)  # 注入认证中间件
 
 
     return app

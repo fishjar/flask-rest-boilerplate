@@ -9,6 +9,7 @@ class Config(object):
     DEBUG = False
     TESTING = False
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev")
+    JWT_SECRET = os.environ.get("JWT_SECRET", "123456")
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     SQLALCHEMY_TRACK_MODIFICATIONS = False  # 追踪对象的修改并且发送信号
     # SQLALCHEMY_POOL_SIZE = 5  # 数据库连接池的大小
