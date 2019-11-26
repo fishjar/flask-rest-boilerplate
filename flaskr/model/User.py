@@ -1,13 +1,20 @@
 import enum
+
 from flaskr import db, ma
+from sqlalchemy.orm import validates
+# from sqlalchemy_serializer import SerializerMixin
 from . import BaseModel
 # from .Auth import Auth
 from .Role import Role
+# from .Group import Group
+# from .UserGroup import UserGroup
 
-roles = db.Table('user_role',
-    db.Column('user_id', db.String, db.ForeignKey('user.id')),
-    db.Column('role_id', db.String, db.ForeignKey('role.id'))
-)
+user_role = db.Table('user_role',
+                     db.Column('user_id', db.String, db.ForeignKey('user.id')),
+                     db.Column('role_id', db.String, db.ForeignKey('role.id'))
+                     )
+
+
 class User(db.Model, BaseModel):
     """ 用户模型
     """
@@ -22,7 +29,8 @@ class User(db.Model, BaseModel):
     homepage = db.Column("homepage", db.String, comment="个人主页")
     birthday = db.Column("birthday", db.Date, comment="生日")
     height = db.Column("height", db.Float, comment="身高(cm)")
-    bloodType = db.Column("blood_type", db.Enum("A","B","AB","O","NULL"), comment="血型(ABO)")
+    bloodType = db.Column("blood_type", db.Enum(
+        "A", "B", "AB", "O", "NULL"), comment="血型(ABO)")
     notice = db.Column("notice", db.Text, comment="备注")
     intro = db.Column("intro", db.Text, comment="简介")
     address = db.Column("address", db.JSON, comment="地址")
@@ -31,9 +39,24 @@ class User(db.Model, BaseModel):
     luckyNumbers = db.Column("lucky_numbers", db.JSON, comment="幸运数字")
     score = db.Column("score", db.Integer, comment="积分")
     userNo = db.Column("user_no", db.Integer, autoincrement=True, comment="编号")
-    # auths = db.relationship("Auth", backref=db.backref('user', lazy='joined'))
-    roles = db.relationship('Role', secondary=roles, backref=db.backref('user', lazy='dynamic'))
-    
+    # auths = db.relationship("Auth", back_populates="user")
+    roles = db.relationship('Role', secondary=user_role, backref="user")
+    # groups = db.relationship('UserGroup', back_populates="users")
+    # groups = db.relationship('UserGroup', )
+
+    @validates('gender')
+    def validate_gender(self, k, v):
+        """验证性别"""
+        assert v in [0, 1, 2], "性别参数错误，须为[0, 1, 2]之一"
+        return v
+
+    @validates('email')
+    def validate_email(self, k, v):
+        """验证邮箱"""
+        assert '@' in v, "邮箱格式错误"
+        return v
+
+
 class UserSchema(ma.ModelSchema):
     """ 用户模式
     """

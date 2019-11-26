@@ -1,5 +1,7 @@
 import click
+import datetime
 from flask.cli import with_appcontext
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 def init_app(app):
@@ -16,13 +18,13 @@ def init_db_command():
 
 
 def init_db():
-    """插入初始数据"""
+    """创建初始数据"""
     from flaskr import db
 
     db.drop_all()
     db.create_all()
 
-    # 插入用户
+    # 创建用户
     from flaskr.model.User import User
     gabe = User(name='gabe')
     jack = User(name='jack')
@@ -33,7 +35,7 @@ def init_db():
     db.session.add_all([gabe, jack, rose])
     db.session.commit()
 
-    # 插入角色
+    # 创建角色
     from flaskr.model.Role import Role
     adminRole = Role(name='admin')
     userRole = Role(name='user')
@@ -41,14 +43,64 @@ def init_db():
     db.session.add_all([adminRole, userRole, guestRole])
     db.session.commit()
 
-    # 关联角色
+    # 创建团队
+    from flaskr.model.Group import Group
+    rayjarGroup = Group(name="rayjar",leader=gabe)
+    titanicGroup = Group(name="titanic",leader=jack)
+    db.session.add_all([rayjarGroup, titanicGroup])
+    db.session.commit()
+
+    # 创建菜单
+    from flaskr.model.Menu import Menu
+    welcomeMenu = Menu(name="welcome",path="/welcome",icon="smile",sort=0)
+    dashboardMenu = Menu(name="dashboard",path="/dashboard",icon="dashboard",sort=1)
+    db.session.add_all([welcomeMenu, welcomeMenu])
+    db.session.commit()
+
+    # usersMenu = Menu(name="users",path="/dashboard/users",sort=0,parent=dashboardMenu)
+    # authsMenu = Menu(name="auths",path="/dashboard/auths",sort=0,parent=dashboardMenu)
+    # rolesMenu = Menu(name="roles",path="/dashboard/roles",sort=0,parent=dashboardMenu)
+    # menusMenu = Menu(name="groups",path="/dashboard/groups",sort=0,parent=dashboardMenu)
+    # groupsMenu = Menu(name="menus",path="/dashboard/menus",sort=0,parent=dashboardMenu)
+    # usergroupsMenu = Menu(name="usergroups",path="/dashboard/usergroups",sort=0,parent=dashboardMenu)
+    usersMenu = Menu(name="users",path="/dashboard/users",sort=0,)
+    authsMenu = Menu(name="auths",path="/dashboard/auths",sort=0,)
+    rolesMenu = Menu(name="roles",path="/dashboard/roles",sort=0,)
+    menusMenu = Menu(name="groups",path="/dashboard/groups",sort=0,)
+    groupsMenu = Menu(name="menus",path="/dashboard/menus",sort=0,)
+    usergroupsMenu = Menu(name="usergroups",path="/dashboard/usergroups",sort=0,)
+    db.session.add_all([usersMenu, authsMenu, rolesMenu, menusMenu, groupsMenu, usergroupsMenu])
+    db.session.commit()
+
+    # 管理角色菜单
+    adminRole.menus = [welcomeMenu,dashboardMenu,usersMenu,authsMenu,rolesMenu,menusMenu, groupsMenu, usergroupsMenu]
+    userRole.menus = [welcomeMenu,dashboardMenu,usersMenu,menusMenu]
+    db.session.commit()
+
+    # 关联用户角色
     gabe.roles = [adminRole, userRole, guestRole]
     jack.roles = [userRole, guestRole]
     rose.roles = [guestRole]
     db.session.commit()
 
-    # 插入帐号
+    # 关联用户团队
+    # gabe.groups = [rayjarGroup]
+    # jack.groups = [rayjarGroup,titanicGroup]
+    # rose.groups = [titanicGroup]
+    rayjarGroup.menbers = [gabe,jack]
+    titanicGroup.menbers = [jack,rose]
+    db.session.commit()
+
+    # 创建帐号
     from flaskr.model.Auth import Auth
-    auth = Auth(userId=gabe.id, authType="account", authName=gabe.name,)
+    authData = {
+        "userId": gabe.id,
+        "authType": "account",
+        "authName": gabe.name,
+        "authCode": generate_password_hash("123456"),
+        "verifyTime": datetime.datetime.utcnow(),
+        "expireTime": datetime.datetime.utcnow() + datetime.timedelta(seconds=60*60*24)
+    }
+    auth = Auth(**authData)
     db.session.add(auth)
     db.session.commit()

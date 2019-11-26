@@ -1,5 +1,6 @@
 import os
 import logging
+
 from logging.handlers import TimedRotatingFileHandler
 from flask import has_request_context, request
 from flaskr.config import base_dir

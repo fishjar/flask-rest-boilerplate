@@ -4,12 +4,12 @@ from flask import current_app as app
 from flask import abort, g, redirect, request, jsonify
 from werkzeug.exceptions import abort
 from flaskr import db
-from flaskr.model.User import User, UserSchema
+from flaskr.model.Group import Group, GroupSchema
 from flaskr.utils.err import InvalidUsage
 from flaskr.utils.auth import role_required
 
-schema = UserSchema()
-schemas = UserSchema(many=True)
+schema = GroupSchema()
+schemas = GroupSchema(many=True)
 
 
 @role_required(["admin"])
@@ -18,7 +18,7 @@ def findAndCountAll():
     page_num = int(request.args.get('pageNum', '1'))
     page_size = int(request.args.get('pageSize', '10'))
     # sorter = request.args.getlist('sorter', None)
-    data = User.query.paginate(
+    data = Group.query.paginate(
         page=page_num, per_page=page_size, error_out=False)
     return {
         "count": data.total,
@@ -32,10 +32,7 @@ def singleCreate():
     """创建单条信息"""
     kwds = request.get_json()
     app.logger.info(f'用户提交数据：{kwds}')  # 记录提交的数据
-    if kwds.get("name", None) is None:
-        # raise InvalidUsage("用户名不能为空", 400)
-        abort(400, "用户名不能为空")
-    item = User(**kwds)
+    item = Group(**kwds)
     db.session.add(item)
     db.session.commit()
     return schema.dump(item)
@@ -49,7 +46,7 @@ def bulkUpdate():
         abort(400, "ID参数不能为空")
     kwds = request.get_json()
     app.logger.info(f'用户提交数据：{ids} - {kwds}')  # 记录提交的数据
-    items = [User.query.get(id) for id in ids]
+    items = [Group.query.get(id) for id in ids]
     for item in items:
         item.update(**kwds)
     db.session.commit()
@@ -64,7 +61,7 @@ def bulkDestroy():
     ids = request.args.getlist('id')
     if len(ids) == 0:
         abort(400, "ID参数不能为空")
-    items = [User.query.get(id) for id in ids]
+    items = [Group.query.get(id) for id in ids]
     for item in items:
         db.session.delete(item)
     db.session.commit()
@@ -75,16 +72,16 @@ def bulkDestroy():
 
 def findByPk(id):
     """根据主键查询单条信息"""
-    # item = User.query.get(id)
+    # item = Group.query.get(id)
     # if item is None:
     #     abort(404, description="记录不存在")
-    item = User.query.get_or_404(id)
+    item = Group.query.get_or_404(id)
     return schema.dump(item)
 
 
 def updateByPk(id):
     """更新单条"""
-    item = User.query.get_or_404(id)
+    item = Group.query.get_or_404(id)
     kwds = request.get_json()
     item.update(**kwds)
     db.session.commit()
@@ -94,7 +91,7 @@ def updateByPk(id):
 @role_required(["admin"])
 def destroyByPk(id):
     """删除单条"""
-    item = User.query.get_or_404(id)
+    item = Group.query.get_or_404(id)
     db.session.delete(item)
     db.session.commit()
     return schema.dump(item)
@@ -105,7 +102,7 @@ def bulkCreate():
     """创建多条信息"""
     kwds_list = request.get_json()
     app.logger.info(f'用户提交数据：{kwds_list}')  # 记录提交的数据
-    items = [User(**kwds) for kwds in kwds_list]
+    items = [Group(**kwds) for kwds in kwds_list]
     db.session.add_all(items)
     db.session.commit()
     return {
