@@ -41,3 +41,42 @@ pip freeze > requirements.txt
   - `User`、`Group`、`UserGroup` 相互引用问题
 - 部分错误无法被`_handle_exception`捕获，而是被内置处理器捕获了
 - 暂无优雅的数据校验，`sqlalchemy` 推荐的校验方式很繁琐
+
+## 目录结构
+
+```sh
+├── flaskr
+│   ├── config.py
+│   ├── handler
+│   │   ├── Auth.py
+│   │   ├── Group.py
+│   │   ├── __init__.py
+│   │   ├── Login.py
+│   │   ├── Menu.py
+│   │   ├── Role.py
+│   │   ├── UserGroup.py
+│   │   └── User.py
+│   ├── __init__.py
+│   ├── model
+│   │   ├── Auth.py
+│   │   ├── Base.py
+│   │   ├── Group.py
+│   │   ├── __init__.py
+│   │   ├── Menu.py
+│   │   ├── Role.py
+│   │   ├── UserGroup.py
+│   │   └── User.py
+│   ├── router
+│   │   └── __init__.py
+│   └── utils
+│       ├── auth.py
+│       ├── bp.py
+│       ├── cmd.py
+│       ├── err.py
+│       ├── __init__.py
+│       ├── jwt.py
+│       └── log.py
+├── LICENSE
+├── README.md
+└── requirements.txt
+```
