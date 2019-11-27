@@ -4,7 +4,7 @@ from flask import current_app as app
 from flask import abort, g, redirect, request, jsonify
 from werkzeug.exceptions import abort
 from flaskr import db
-from flaskr.model.UserGroup import UserGroup, UserGroupSchema
+from flaskr.model import UserGroup, UserGroupSchema
 from flaskr.utils.err import InvalidUsage
 from flaskr.utils.auth import role_required
 

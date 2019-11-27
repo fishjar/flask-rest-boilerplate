@@ -5,7 +5,7 @@ from flask import abort, Blueprint, flash, g, redirect, render_template, request
 from werkzeug.exceptions import abort
 from werkzeug.security import generate_password_hash, check_password_hash
 from flaskr import db
-from flaskr.model.Auth import Auth
+from flaskr.model import Auth
 from flaskr.utils.jwt import jwt_decode, jwt_encode
 
 
@@ -30,6 +30,8 @@ def account():
         abort(401, "帐号异常")
     elif not check_password_hash(auth.authCode, password):
         abort(401, "密码错误")
+    # elif not auth.check_password(password):
+    #     abort(401, "密码错误")
 
     token = jwt_encode(authId=auth.id, authType=auth.authType,
                        authName=auth.authName)

@@ -1,8 +1,8 @@
 import enum
 
 from flaskr import db, ma
-from . import BaseModel
-from .Menu import Menu
+from .Base import BaseModel
+
 
 role_menu = db.Table('role_menu',
                      db.Column('role_id', db.String, db.ForeignKey('role.id')),
@@ -16,8 +16,7 @@ class Role(db.Model, BaseModel):
     __tablename__ = "role"
 
     name = db.Column("name", db.String(32), nullable=False, comment="角色名称")
-    menus = db.relationship('Menu', secondary=role_menu,
-                            backref=db.backref('role', lazy='dynamic'))
+    menus = db.relationship('Menu', secondary=role_menu, backref="roles")
 
 
 class RoleSchema(ma.ModelSchema):

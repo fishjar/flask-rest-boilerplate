@@ -4,7 +4,7 @@ from flask import current_app as app
 from flask import abort, g, redirect, request, jsonify
 from werkzeug.exceptions import abort
 from flaskr import db
-from flaskr.model.Menu import Menu, MenuSchema
+from flaskr.model import Menu, MenuSchema
 from flaskr.utils.err import InvalidUsage
 from flaskr.utils.auth import role_required
 

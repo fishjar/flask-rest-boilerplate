@@ -27,7 +27,7 @@ def init_app(app):
         if (authId is None) or (authType is None) or (authName is None):
             abort(403, "token信息有误")
 
-        from flaskr.model.Auth import Auth
+        from flaskr.model import Auth
         auth = Auth.query.get(authId)
         if auth is None:
             abort(403, "帐号不存在")
@@ -63,9 +63,8 @@ def role_required(roles=["admin"]):
             if auth is None:
                 abort(403, "需要登录")
             auth_roles = [role.name for role in auth.user.roles]
-            for role in roles:
-                if not role in auth_roles:
-                    abort(403, "角色缺少权限")
+            if not (set(roles) & set(auth_roles)):
+                abort(403, "角色缺少权限")
             return func(*args, **kw)
         return wrapper
     return decorator

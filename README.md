@@ -1,5 +1,6 @@
 # flask rest bolierplate
 
+## 使用指引
 
 ```sh
 # 虚拟环境
@@ -31,3 +32,12 @@ flask shell
 # 导出依赖
 pip freeze > requirements.txt
 ```
+
+## 存在问题
+
+- `Relationships` 问题： [参考](https://docs.sqlalchemy.org/en/13/orm/basic_relationships.html)
+  - 模型相互引用问题，网上很多类似问题：[参考](https://stackoverflow.com/questions/34421205/sqlalchemy-model-circular-import/34503823),[2](https://stackoverflow.com/questions/58095513/flask-sqlalchemy-relationship-error-name-classname-is-not-defined-using-diff)
+  - `Menu` 自引用问题，`remote_side=[id]` 的 `id`在`BaseModel`定义，如何引入
+  - `User`、`Group`、`UserGroup` 相互引用问题
+- 部分错误无法被`_handle_exception`捕获，而是被内置处理器捕获了
+- 暂无优雅的数据校验，`sqlalchemy` 推荐的校验方式很繁琐

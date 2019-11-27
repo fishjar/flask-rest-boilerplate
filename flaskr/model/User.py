@@ -2,12 +2,9 @@ import enum
 
 from flaskr import db, ma
 from sqlalchemy.orm import validates
-# from sqlalchemy_serializer import SerializerMixin
-from . import BaseModel
-# from .Auth import Auth
-from .Role import Role
-# from .Group import Group
-# from .UserGroup import UserGroup
+from .Base import BaseModel
+
+
 
 user_role = db.Table('user_role',
                      db.Column('user_id', db.String, db.ForeignKey('user.id')),
@@ -39,10 +36,7 @@ class User(db.Model, BaseModel):
     luckyNumbers = db.Column("lucky_numbers", db.JSON, comment="幸运数字")
     score = db.Column("score", db.Integer, comment="积分")
     userNo = db.Column("user_no", db.Integer, autoincrement=True, comment="编号")
-    # auths = db.relationship("Auth", back_populates="user")
-    roles = db.relationship('Role', secondary=user_role, backref="user")
-    # groups = db.relationship('UserGroup', back_populates="users")
-    # groups = db.relationship('UserGroup', )
+    roles = db.relationship('Role', secondary=user_role, backref="users")
 
     @validates('gender')
     def validate_gender(self, k, v):

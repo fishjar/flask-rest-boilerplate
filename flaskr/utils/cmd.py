@@ -21,11 +21,14 @@ def init_db():
     """创建初始数据"""
     from flaskr import db
 
+    print("\n\n\n\n---------删除表-----------")
     db.drop_all()
+    print("\n\n\n\n---------创建表-----------")
     db.create_all()
 
     # 创建用户
-    from flaskr.model.User import User
+    print("\n\n\n\n---------创建用户-----------")
+    from flaskr.model import User
     gabe = User(name='gabe')
     jack = User(name='jack')
     rose = User(name='rose')
@@ -36,7 +39,8 @@ def init_db():
     db.session.commit()
 
     # 创建角色
-    from flaskr.model.Role import Role
+    print("\n\n\n\n---------创建角色-----------")
+    from flaskr.model import Role
     adminRole = Role(name='admin')
     userRole = Role(name='user')
     guestRole = Role(name='guest')
@@ -44,14 +48,16 @@ def init_db():
     db.session.commit()
 
     # 创建团队
-    from flaskr.model.Group import Group
+    print("\n\n\n\n---------创建团队-----------")
+    from flaskr.model import Group
     rayjarGroup = Group(name="rayjar",leader=gabe)
     titanicGroup = Group(name="titanic",leader=jack)
     db.session.add_all([rayjarGroup, titanicGroup])
     db.session.commit()
 
     # 创建菜单
-    from flaskr.model.Menu import Menu
+    print("\n\n\n\n---------创建菜单-----------")
+    from flaskr.model import Menu
     welcomeMenu = Menu(name="welcome",path="/welcome",icon="smile",sort=0)
     dashboardMenu = Menu(name="dashboard",path="/dashboard",icon="dashboard",sort=1)
     db.session.add_all([welcomeMenu, welcomeMenu])
@@ -63,27 +69,33 @@ def init_db():
     # menusMenu = Menu(name="groups",path="/dashboard/groups",sort=0,parent=dashboardMenu)
     # groupsMenu = Menu(name="menus",path="/dashboard/menus",sort=0,parent=dashboardMenu)
     # usergroupsMenu = Menu(name="usergroups",path="/dashboard/usergroups",sort=0,parent=dashboardMenu)
-    usersMenu = Menu(name="users",path="/dashboard/users",sort=0,)
-    authsMenu = Menu(name="auths",path="/dashboard/auths",sort=0,)
-    rolesMenu = Menu(name="roles",path="/dashboard/roles",sort=0,)
-    menusMenu = Menu(name="groups",path="/dashboard/groups",sort=0,)
-    groupsMenu = Menu(name="menus",path="/dashboard/menus",sort=0,)
-    usergroupsMenu = Menu(name="usergroups",path="/dashboard/usergroups",sort=0,)
+
+    usersMenu = Menu(name="users",path="/dashboard/users",sort=0,parentId=dashboardMenu.id)
+    authsMenu = Menu(name="auths",path="/dashboard/auths",sort=0,parentId=dashboardMenu.id)
+    rolesMenu = Menu(name="roles",path="/dashboard/roles",sort=0,parentId=dashboardMenu.id)
+    menusMenu = Menu(name="groups",path="/dashboard/groups",sort=0,parentId=dashboardMenu.id)
+    groupsMenu = Menu(name="menus",path="/dashboard/menus",sort=0,parentId=dashboardMenu.id)
+    usergroupsMenu = Menu(name="usergroups",path="/dashboard/usergroups",sort=0,parentId=dashboardMenu.id)
+    
+
     db.session.add_all([usersMenu, authsMenu, rolesMenu, menusMenu, groupsMenu, usergroupsMenu])
     db.session.commit()
 
-    # 管理角色菜单
+    # 关联角色菜单
+    print("\n\n\n\n---------关联角色菜单-----------")
     adminRole.menus = [welcomeMenu,dashboardMenu,usersMenu,authsMenu,rolesMenu,menusMenu, groupsMenu, usergroupsMenu]
     userRole.menus = [welcomeMenu,dashboardMenu,usersMenu,menusMenu]
     db.session.commit()
 
     # 关联用户角色
+    print("\n\n\n\n---------关联用户角色-----------")
     gabe.roles = [adminRole, userRole, guestRole]
     jack.roles = [userRole, guestRole]
     rose.roles = [guestRole]
     db.session.commit()
 
     # 关联用户团队
+    print("\n\n\n\n---------关联用户团队-----------")
     # gabe.groups = [rayjarGroup]
     # jack.groups = [rayjarGroup,titanicGroup]
     # rose.groups = [titanicGroup]
@@ -92,12 +104,14 @@ def init_db():
     db.session.commit()
 
     # 创建帐号
-    from flaskr.model.Auth import Auth
+    print("\n\n\n\n---------创建帐号-----------")
+    from flaskr.model import Auth
     authData = {
         "userId": gabe.id,
         "authType": "account",
         "authName": gabe.name,
         "authCode": generate_password_hash("123456"),
+        # "password": "123456",
         "verifyTime": datetime.datetime.utcnow(),
         "expireTime": datetime.datetime.utcnow() + datetime.timedelta(seconds=60*60*24)
     }
