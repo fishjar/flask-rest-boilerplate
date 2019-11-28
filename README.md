@@ -14,6 +14,7 @@ python3 -m venv venv
 # pip install Flask-SQLAlchemy
 # pip install flask-marshmallow
 # pip install marshmallow-sqlalchemy
+# pip install PyJWT
 pip install -r requirements.txt
 
 # 环境变量
