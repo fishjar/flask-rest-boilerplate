@@ -4,6 +4,7 @@
 
 ```sh
 # 虚拟环境
+# apt-get install python3-venv
 python3 -m venv venv
 
 # 激活
