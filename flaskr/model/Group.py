@@ -11,8 +11,7 @@ class Group(db.Model, BaseModel):
     name = db.Column("name", db.String(32), nullable=False, comment="角色名称")
     leaderId = db.Column("leader_id", db.String, db.ForeignKey('user.id'), nullable=False, comment="队长ID")
     leader = db.relationship("User")
-    # menbers = db.relationship('UserGroup')
-    # menbers = db.relationship('User', secondary="user_group" )
+    menbers = db.relationship('User', secondary="user_group", backref="groups")
 
 class GroupSchema(ma.ModelSchema):
     """ 组模式

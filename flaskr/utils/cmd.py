@@ -63,20 +63,12 @@ def init_db():
     db.session.add_all([welcomeMenu, welcomeMenu])
     db.session.commit()
 
-    # usersMenu = Menu(name="users",path="/dashboard/users",sort=0,parent=dashboardMenu)
-    # authsMenu = Menu(name="auths",path="/dashboard/auths",sort=0,parent=dashboardMenu)
-    # rolesMenu = Menu(name="roles",path="/dashboard/roles",sort=0,parent=dashboardMenu)
-    # menusMenu = Menu(name="groups",path="/dashboard/groups",sort=0,parent=dashboardMenu)
-    # groupsMenu = Menu(name="menus",path="/dashboard/menus",sort=0,parent=dashboardMenu)
-    # usergroupsMenu = Menu(name="usergroups",path="/dashboard/usergroups",sort=0,parent=dashboardMenu)
-
-    usersMenu = Menu(name="users",path="/dashboard/users",sort=0,parentId=dashboardMenu.id)
-    authsMenu = Menu(name="auths",path="/dashboard/auths",sort=0,parentId=dashboardMenu.id)
-    rolesMenu = Menu(name="roles",path="/dashboard/roles",sort=0,parentId=dashboardMenu.id)
-    menusMenu = Menu(name="groups",path="/dashboard/groups",sort=0,parentId=dashboardMenu.id)
-    groupsMenu = Menu(name="menus",path="/dashboard/menus",sort=0,parentId=dashboardMenu.id)
-    usergroupsMenu = Menu(name="usergroups",path="/dashboard/usergroups",sort=0,parentId=dashboardMenu.id)
-    
+    usersMenu = Menu(name="users",path="/dashboard/users",sort=0,parent=dashboardMenu)
+    authsMenu = Menu(name="auths",path="/dashboard/auths",sort=0,parent=dashboardMenu)
+    rolesMenu = Menu(name="roles",path="/dashboard/roles",sort=0,parent=dashboardMenu)
+    menusMenu = Menu(name="groups",path="/dashboard/groups",sort=0,parent=dashboardMenu)
+    groupsMenu = Menu(name="menus",path="/dashboard/menus",sort=0,parent=dashboardMenu)
+    usergroupsMenu = Menu(name="usergroups",path="/dashboard/usergroups",sort=0,parent=dashboardMenu)
 
     db.session.add_all([usersMenu, authsMenu, rolesMenu, menusMenu, groupsMenu, usergroupsMenu])
     db.session.commit()
@@ -107,7 +99,7 @@ def init_db():
     print("\n\n\n\n---------创建帐号-----------")
     from flaskr.model import Auth
     authData = {
-        "userId": gabe.id,
+        "user": gabe,
         "authType": "account",
         "authName": gabe.name,
         "authCode": generate_password_hash("123456"),

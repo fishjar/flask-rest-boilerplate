@@ -10,9 +10,7 @@ class UserGroup(db.Model, BaseModel):
     __tablename__ = "user_group"
 
     userId = db.Column("user_id", db.String, db.ForeignKey('user.id'), nullable=False, comment="用户ID")
-    # user = db.relationship('User')
     groupId = db.Column("group_id", db.String, db.ForeignKey('group.id'), nullable=False, comment="组ID")
-    # group = db.relationship('Group', backref="user_usergroups")
     level = db.Column("level", db.SmallInteger, default=0, comment="级别")
     joinTime = db.Column("join_time", db.DateTime, comment="加入时间")
     
