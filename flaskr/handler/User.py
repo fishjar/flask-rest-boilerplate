@@ -18,7 +18,9 @@ def findAndCountAll():
     page_num = int(request.args.get('pageNum', '1'))
     page_size = int(request.args.get('pageSize', '10'))
     # sorter = request.args.getlist('sorter', None)
-    data = User.query.paginate(
+    # data = User.query.paginate(
+    #     page=page_num, per_page=page_size, error_out=False)
+    data = User.query.paginate_(
         page=page_num, per_page=page_size, error_out=False)
     return {
         "count": data.total,
@@ -66,7 +68,8 @@ def bulkDestroy():
         abort(400, "ID参数不能为空")
     items = [User.query.get(id) for id in ids]
     for item in items:
-        db.session.delete(item)
+        # db.session.delete(item)
+        item.delete()
     db.session.commit()
     return {
         "count": len(ids)
@@ -78,13 +81,13 @@ def findByPk(id):
     # item = User.query.get(id)
     # if item is None:
     #     abort(404, description="记录不存在")
-    item = User.query.get_or_404(id)
+    item = User.query.get_or_404_(id)
     return schema.dump(item)
 
 
 def updateByPk(id):
     """更新单条"""
-    item = User.query.get_or_404(id)
+    item = User.query.get_or_404_(id)
     kwds = request.get_json()
     item.update(**kwds)
     db.session.commit()
@@ -94,8 +97,9 @@ def updateByPk(id):
 @role_required(["admin"])
 def destroyByPk(id):
     """删除单条"""
-    item = User.query.get_or_404(id)
-    db.session.delete(item)
+    item = User.query.get_or_404_(id)
+    # db.session.delete(item)
+    item.delete()
     db.session.commit()
     return schema.dump(item)
 

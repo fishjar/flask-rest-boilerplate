@@ -19,7 +19,7 @@ def account():
         abort(401, "缺少参数")
 
     auth_type = "account"
-    auth = Auth.query.filter_by(authType=auth_type, authName=auth_name).first()
+    auth = Auth.query.filter_by(authType=auth_type, authName=auth_name, deletedAt=None).first()
     if not auth:
         abort(401, "用户不存在")
     elif not auth.isEnabled:

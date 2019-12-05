@@ -28,7 +28,7 @@ def init_app(app):
             abort(403, "token信息有误")
 
         from flaskr.model import Auth
-        auth = Auth.query.get(authId)
+        auth = Auth.query.get_(authId)
         if auth is None:
             abort(403, "帐号不存在")
         if not auth.isEnabled:

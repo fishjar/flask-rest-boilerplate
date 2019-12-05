@@ -2,6 +2,30 @@ import uuid
 import datetime
 from flaskr import db
 from flask import abort
+from flask_sqlalchemy import BaseQuery
+
+
+class CustomQuery(BaseQuery):
+    """ 自定义查询
+    """
+
+    def paginate_(self, **kwargs):
+        """分页查询-过滤软删除"""
+        return self.filter_by(deletedAt=None).paginate(**kwargs)
+
+    def get_or_404_(self, id):
+        """查询-过滤软删除"""
+        obj = self.get_or_404(id, "记录不存在")
+        if obj.deletedAt is not None:
+            abort(404, "记录已删除")
+        return obj
+
+    def get_(self, id):
+        """查询-过滤软删除"""
+        obj = self.get(id)
+        if obj is None or obj.deletedAt is not None:
+            return None
+        return obj
 
 
 class Column(db.Column):
@@ -21,6 +45,7 @@ class BaseModel(db.Model):
     """ 模型的基类
     """
     __abstract__ = True
+    query_class = CustomQuery
 
     id = db.Column("id", db.String,  primary_key=True,
                    default=lambda: str(uuid.uuid4()), comment="id")
@@ -61,5 +86,11 @@ class BaseModel(db.Model):
     def update(self, **kwds):
         """字典更新到模型"""
         # self.__dict__.update(kwds)
-        for (k, v) in kwds.items():
-            setattr(self, k, v)
+        # 软删除的数据不再更新
+        if self.deletedAt is None:
+            for (k, v) in kwds.items():
+                setattr(self, k, v)
+
+    def delete(self):
+        """软删除"""
+        self.deletedAt = datetime.datetime.utcnow()
