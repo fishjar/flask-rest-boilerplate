@@ -1,18 +1,18 @@
 import enum
 
 from flaskr import db, ma
-from .Base import BaseModel
+from .Base import BaseModel, Column
 
 
-class UserGroup(db.Model, BaseModel):
+class UserGroup(BaseModel):
     """ 用户组模型
     """
     __tablename__ = "user_group"
 
-    userId = db.Column("user_id", db.String, db.ForeignKey('user.id'), nullable=False, comment="用户ID")
-    groupId = db.Column("group_id", db.String, db.ForeignKey('group.id'), nullable=False, comment="组ID")
-    level = db.Column("level", db.SmallInteger, default=0, comment="级别")
-    joinTime = db.Column("join_time", db.DateTime, comment="加入时间")
+    userId = Column("user_id", db.String, db.ForeignKey('user.id'), nullable=False, comment="用户ID")
+    groupId = Column("group_id", db.String, db.ForeignKey('group.id'), nullable=False, comment="组ID")
+    level = Column("level", db.SmallInteger, default=0, comment="级别")
+    joinTime = Column("join_time", db.DateTime, comment="加入时间")
     
 
 class UserGroupSchema(ma.ModelSchema):
