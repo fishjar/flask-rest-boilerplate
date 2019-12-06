@@ -56,7 +56,8 @@ class BaseModel(db.Model):
     deletedAt = db.Column("deleted_at", db.DateTime, comment="删除时间")
 
     # __mapper_args__ = {
-    #     "order_by": createdAt.desc()
+    #     # "order_by": createdAt.desc(),
+    #     "deleted_at": None,
     # }
 
     def __new__(cls, *args, **kwargs):
@@ -78,18 +79,37 @@ class BaseModel(db.Model):
                 # 模型没有该属性
                 # 即使此处不拦截，SQLAlchemy也会抛出异常
                 errors.append(f'字段[{k}]:多余的')
-                pass
         if errors:
             abort(500, "; ".join(errors))
         return super(BaseModel, cls).__new__(cls)
+
+    def __setattr__(self, name, value):
+        """属性验证"""
+        field = getattr(self.__class__, name, None)
+        if field is not None:
+            validator = getattr(field, "validator", None)
+            if validator is not None:
+                schema, msg = validator
+                try:
+                    # https://github.com/keleshev/schema
+                    schema.validate(value)
+                except Exception as e:
+                    raise Exception(f'参数[{name}]:{msg or str(e)}')
+        super(BaseModel, self).__setattr__(name, value)
 
     def update(self, **kwds):
         """字典更新到模型"""
         # self.__dict__.update(kwds)
         # 软删除的数据不再更新
         if self.deletedAt is None:
+            errors = []
             for (k, v) in kwds.items():
-                setattr(self, k, v)
+                try:
+                    setattr(self, k, v)
+                except Exception as e:
+                    errors.append(str(e))
+            if errors:
+                abort(500, "; ".join(errors))
 
     def delete(self):
         """软删除"""
