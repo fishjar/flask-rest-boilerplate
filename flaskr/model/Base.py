@@ -56,8 +56,7 @@ class BaseModel(db.Model):
     deletedAt = db.Column("deleted_at", db.DateTime, comment="删除时间")
 
     # __mapper_args__ = {
-    #     # "order_by": createdAt.desc(),
-    #     "deleted_at": None,
+    #     "order_by": createdAt.desc()
     # }
 
     def __new__(cls, *args, **kwargs):
