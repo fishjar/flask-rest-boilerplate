@@ -51,7 +51,7 @@ def bulkUpdate():
         abort(400, "ID参数不能为空")
     kwds = request.get_json()
     app.logger.info(f'用户提交数据：{ids} - {kwds}')  # 记录提交的数据
-    items = [User.query.get(id) for id in ids]
+    items = [User.query.with_for_update().get(id) for id in ids] # 加锁
     for item in items:
         item.update(**kwds)
     db.session.commit()
@@ -87,7 +87,10 @@ def findByPk(id):
 
 def updateByPk(id):
     """更新单条"""
-    item = User.query.get_or_404_(id)
+    # item = User.query.get_or_404_(id)
+    item = User.query.with_for_update().get(id) # 此处加锁
+    if item is None or item.deletedAt is not None:
+        abort(404, "记录不存在")
     kwds = request.get_json()
     item.update(**kwds)
     db.session.commit()
