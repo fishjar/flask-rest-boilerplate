@@ -14,6 +14,6 @@ build/
 *.egg-info/
 
 tmp
-.db
-.sqlite
-.log
+*.db
+*.sqlite
+*.log

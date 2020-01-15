@@ -1,7 +1,8 @@
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from flaskr.config import DevelopmentConfig
+from flaskr.config import ProductionConfig, DevelopmentConfig, TestingConfig
 from flaskr.utils import cmd, bp, err, log, auth
 
 __version__ = (1, 0, 0, "dev")
@@ -16,7 +17,14 @@ def create_app(config=None):
 
     # 加载配置信息
     if config is None:
-        app.config.from_object(DevelopmentConfig())
+        FLASK_ENV = os.environ.get("FLASK_ENV")
+        print("---------",FLASK_ENV)
+        if FLASK_ENV is 'development':
+            app.config.from_object(DevelopmentConfig())
+        elif FLASK_ENV is 'testing':
+            app.config.from_object(TestingConfig())
+        else:
+            app.config.from_object(ProductionConfig())
     else:
         app.config.update(config)
 
@@ -31,6 +39,5 @@ def create_app(config=None):
         err.init_app()  # 错误捕获
 
     auth.init_app(app)  # 注入认证中间件
-
 
     return app

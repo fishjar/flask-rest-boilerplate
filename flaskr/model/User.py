@@ -7,8 +7,8 @@ from .Base import BaseModel, Column
 
 
 user_role = db.Table('user_role',
-                     Column('user_id', db.String, db.ForeignKey('user.id')),
-                     Column('role_id', db.String, db.ForeignKey('role.id'))
+                     Column('user_id', db.String(64), db.ForeignKey('user.id')),
+                     Column('role_id', db.String(64), db.ForeignKey('role.id'))
                      )
 
 
@@ -22,11 +22,11 @@ class User(BaseModel):
     nickname = Column("nickname", db.String(64), comment="昵称")
     gender = Column("gender", db.SmallInteger, comment="性别", validator=(
         Schema(lambda v: v in set([0, 1, 2])), "值须为[0, 1, 2]之一"))
-    avatar = Column("avatar", db.String, comment="头像")
+    avatar = Column("avatar", db.String(256), comment="头像")
     mobile = Column("mobile", db.String(16), comment="手机")
-    email = Column("email", db.String, comment="邮箱", validator=(
+    email = Column("email", db.String(32), comment="邮箱", validator=(
         Regex(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$"), "格式不正确"))
-    homepage = Column("homepage", db.String, comment="个人主页")
+    homepage = Column("homepage", db.String(256), comment="个人主页")
     birthday = Column("birthday", db.Date, comment="生日")
     height = Column("height", db.Float, comment="身高(cm)")
     bloodType = Column("blood_type", db.Enum("A", "B", "AB", "O", "NULL"), comment="血型(ABO)", validator=(

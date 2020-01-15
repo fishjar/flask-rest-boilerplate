@@ -5,8 +5,8 @@ from .Base import BaseModel, Column
 
 
 role_menu = db.Table('role_menu',
-                     Column('role_id', db.String, db.ForeignKey('role.id')),
-                     Column('menu_id', db.String, db.ForeignKey('menu.id'))
+                     Column('role_id', db.String(64), db.ForeignKey('role.id')),
+                     Column('menu_id', db.String(64), db.ForeignKey('menu.id'))
                      )
 
 

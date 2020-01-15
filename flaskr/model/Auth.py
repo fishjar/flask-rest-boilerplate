@@ -11,12 +11,12 @@ class Auth(BaseModel):
     """
     __tablename__ = "auth"
 
-    userId = Column("user_id", db.String, db.ForeignKey('user.id'), nullable=False, comment="用户ID")
+    userId = Column("user_id", db.String(64), db.ForeignKey('user.id'), nullable=False, comment="用户ID")
     user = db.relationship("User", backref="auths")
     # user = db.relationship("User", back_populates="auths")
     authType = Column("auth_type", db.Enum("account","email","phone","wechat","weibo"), nullable=False, comment="鉴权类型")
     authName = Column("auth_name", db.String(128), nullable=False, comment="鉴权名称")
-    authCode = Column("auth_code", db.String, comment="鉴权识别码")
+    authCode = Column("auth_code", db.String(128), comment="鉴权识别码")
     verifyTime = Column("verify_time", db.DateTime, comment="认证时间")
     expireTime = Column("expire_time", db.DateTime, comment="过期时间")
     isEnabled = Column("is_enabled", db.Boolean, default=True, comment="是否启用")

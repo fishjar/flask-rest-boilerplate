@@ -19,7 +19,7 @@ class Config(object):
 
 class ProductionConfig(Config):
     """生产环境配置"""
-    SQLALCHEMY_DATABASE_URI = "mysql://user@localhost/foo"
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:123456@127.0.0.1:3306/testdb"
 
 
 class DevelopmentConfig(Config):

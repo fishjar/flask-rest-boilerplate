@@ -16,11 +16,14 @@ python3 -m venv venv
 # pip install flask-marshmallow
 # pip install marshmallow-sqlalchemy
 # pip install PyJWT
-# pip install schema 
+# pip install schema
+# pip install pymysql
 pip install -r requirements.txt
 
 # 环境变量
 export FLASK_APP=flaskr
+# export FLASK_ENV=production # 缺省值
+# export FLASK_ENV=testing
 export FLASK_ENV=development
 
 # 初始化
@@ -34,6 +37,22 @@ flask shell
 
 # 导出依赖
 pip freeze > requirements.txt
+
+# 如有需要
+# 启动一个数据库
+sudo docker-compose -f docker-compose.mysql.yml up -d
+```
+
+### 生产部署
+
+```sh
+# 依赖
+pip install gunicorn
+pip install gevent
+
+# 运行
+# gunicorn main:app -w 4 -e FLASK_ENV=production -b :8000
+gunicorn -c gunicorn.py main:app
 ```
 
 ## 存在问题

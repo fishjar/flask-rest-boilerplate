@@ -9,7 +9,7 @@ class Group(BaseModel):
     __tablename__ = "group"
 
     name = Column("name", db.String(32), nullable=False, comment="角色名称")
-    leaderId = Column("leader_id", db.String, db.ForeignKey('user.id'), nullable=False, comment="队长ID")
+    leaderId = Column("leader_id", db.String(64), db.ForeignKey('user.id'), nullable=False, comment="队长ID")
     leader = db.relationship("User")
     menbers = db.relationship('User', secondary="user_group", backref="groups")
 

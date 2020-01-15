@@ -47,7 +47,7 @@ class BaseModel(db.Model):
     __abstract__ = True
     query_class = CustomQuery
 
-    id = db.Column("id", db.String,  primary_key=True,
+    id = db.Column("id", db.String(64),  primary_key=True,
                    default=lambda: str(uuid.uuid4()), comment="id")
     createdAt = db.Column("created_at", db.DateTime,
                           default=datetime.datetime.utcnow, comment="创建时间")
