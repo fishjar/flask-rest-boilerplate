@@ -2,7 +2,7 @@ import os
 
 # 获取当前路径(项目根目录)
 base_dir = os.path.abspath(os.path.dirname(__file__))
-
+DATABASE_URI = os.environ.get("DATABASE_URI","sqlite:///:memory:")
 
 class Config(object):
     """共用的基本配置"""
@@ -19,7 +19,10 @@ class Config(object):
 
 class ProductionConfig(Config):
     """生产环境配置"""
-    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:123456@127.0.0.1:3306/testdb"
+    # SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:123456@127.0.0.1:3306/testdb"
+    # SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:123456@db:3306/testdb"
+    SQLALCHEMY_DATABASE_URI = DATABASE_URI
+    SQLALCHEMY_ECHO = True  # 打印SQL语句
 
 
 class DevelopmentConfig(Config):

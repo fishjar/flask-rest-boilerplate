@@ -18,10 +18,9 @@ def create_app(config=None):
     # 加载配置信息
     if config is None:
         FLASK_ENV = os.environ.get("FLASK_ENV")
-        print("---------",FLASK_ENV)
-        if FLASK_ENV is 'development':
+        if FLASK_ENV == 'development':
             app.config.from_object(DevelopmentConfig())
-        elif FLASK_ENV is 'testing':
+        elif FLASK_ENV == 'testing':
             app.config.from_object(TestingConfig())
         else:
             app.config.from_object(ProductionConfig())

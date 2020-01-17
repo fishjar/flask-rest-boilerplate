@@ -37,10 +37,6 @@ flask shell
 
 # 导出依赖
 pip freeze > requirements.txt
-
-# 如有需要
-# 启动一个数据库
-sudo docker-compose -f docker-compose.mysql.yml up -d
 ```
 
 ### 生产部署
@@ -50,9 +46,34 @@ sudo docker-compose -f docker-compose.mysql.yml up -d
 pip install gunicorn
 pip install gevent
 
+# 如有需要
+# 启动一个数据库
+sudo docker-compose -f docker-compose.mysql.yml up -d
+
 # 运行
 # gunicorn main:app -w 4 -e FLASK_ENV=production -b :8000
 gunicorn -c gunicorn.py main:app
+```
+
+### docker 部署
+
+```sh
+# 编辑环境变量
+vi .env.prod
+
+# 启动
+docker-compose up -d
+
+# 初始化数据
+docker-compose exec web flask init-db
+
+# 测试
+curl 127.0.0.1:8000
+curl -H "Content-Type: application/json" -d '{"userName":"gabe","password":"123456"}' 127.0.0.1:8000/login/account
+
+# 进入容器
+docker-compose exec web bash
+docker-compose exec db bash
 ```
 
 ## 存在问题
@@ -67,6 +88,9 @@ gunicorn -c gunicorn.py main:app
 ## 目录结构
 
 ```sh
+├── docker-compose.mysql.yml
+├── docker-compose.yml
+├── Dockerfile
 ├── flaskr
 │   ├── config.py
 │   ├── handler
@@ -97,8 +121,11 @@ gunicorn -c gunicorn.py main:app
 │       ├── err.py
 │       ├── __init__.py
 │       ├── jwt.py
-│       └── log.py
+│       ├── log.py
+│       └── __pycache__
+├── gunicorn.py
 ├── LICENSE
+├── main.py
 ├── README.md
 └── requirements.txt
 ```
