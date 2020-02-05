@@ -1,4 +1,4 @@
-# flask rest bolierplate
+# flask rest boilerplate
 
 ## 使用指引
 
