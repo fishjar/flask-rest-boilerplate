@@ -21,7 +21,19 @@ class <%- modelKey -%>(BaseModel):
 	const isRequired = model.required && model.required.includes(fieldKey);
     const dbType = dataFormats[field.format][1];
 -%>
-	<%- fieldKey -%> = Column("<%- field['x-fieldName'] || fieldKey -%>", db.<%- dbType -%><% if(field.enum) { -%>(<%- field.enum.forEach(item=>{ -%> <%- JSON.stringify(item) -%>,<% }) -%>)<% } -%><% else if(dbType==='String') { -%>(<%- field['x-length'] || '255' -%>)<% } -%>, <% if (model.required && model.required.includes(fieldKey)) { -%>nullable=False,<% } -%> comment="<%- field['x-description'] || field.description || null  -%>")
+	<%- fieldKey -%> = Column("<%- field['x-fieldName'] || fieldKey -%>", <% 
+    if(field.enum) { 
+    -%>db.Enum(<% field.enum.forEach(item=>{ -%> <%- JSON.stringify(item) -%>,<% }) -%>)<% 
+    } else if(dbType==='String') { 
+    -%>db.<%- dbType -%>(<%- field['x-length'] || '255' -%>)<% 
+    } else {
+    -%>db.<%- dbType -%><%
+    }
+    -%>, <%
+    if (model.required && model.required.includes(fieldKey)) {
+    -%>nullable=False, <% 
+    } 
+    -%>comment="<%- field['x-description'] || field.description || null  -%>")
 <% }) -%>
 
 class <%- modelKey -%>Schema(ma.ModelSchema):
